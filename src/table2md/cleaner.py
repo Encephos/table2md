@@ -15,7 +15,7 @@ def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
         if isinstance(content, NavigableString):
             text = content.strip()
             # Pipes und Newlines sind Gift für MD Tabellen
-            text = text.replace("|", "\\|").replace("\n", " ")
+            text = text.replace("|", "\|").replace("\n", " ")
             if text:
                 text_parts.append(text)
         
@@ -23,7 +23,7 @@ def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
             # Rekursive Verarbeitung für Tags im Tag möglich, 
             # hier flach gehalten für Stabilität.
             
-            inner_text = content.get_text(strip=True).replace("|", "\\|").replace("\n", " ")
+            inner_text = content.get_text(strip=True).replace("|", "\|").replace("\n", " ")
             
             if content.name == 'br':
                 text_parts.append("<br>")
@@ -43,3 +43,4 @@ def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
                 text_parts.append(inner_text)
 
     return " ".join(text_parts).strip()
+    

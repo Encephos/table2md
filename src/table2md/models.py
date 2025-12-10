@@ -54,3 +54,4 @@ class MarkdownTable:
             lines.append(f"| {' | '.join(current_row)} |")
             
         return "\n".join(lines)
+        
