@@ -12,6 +12,20 @@ There is an existing package called `table2md` on PyPI.
 
 * **This package** is an *extractor and parser*. It takes raw HTML source code, uses `BeautifulSoup` to parse the tags, mathematically resolves complex cell spans (rowspans/colspans), and builds an internal representation before exporting to Markdown.
 
+### The Problem:
+Most parsers turn this `<td rowspan="2">` into a misaligned mess:
+| Header | Value |
+|---|---|
+| Spanned | Row 1 |
+| Row 2 | |   <-- Everything shifts!
+
+### The Solution:
+`html-table-rescuer` uses a grid solver to correctly normalize the matrix:
+| Header | Value |
+|---|---|
+| Spanned | Row 1 |
+| dito (Spanned) | Row 2 |
+
 ## Architecture
 
 Our pipeline ensures that complex HTML structures are safely converted without data loss or misalignment:
