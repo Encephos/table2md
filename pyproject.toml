@@ -3,11 +3,11 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "table2md"
+name = "html-table-rescuer"
 version = "0.1.0"
 description = "Extracts HTML tables and converts them to Markdown, preserving structure via row/colspan handling."
 readme = "README.md"
-authors = [{ name = "Encephos", email = "encephos@gmail.com" }]
+authors = [{ name = "Encephos", email = "magiltraun@gmail.com" }]
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -16,10 +16,24 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 dependencies = [
-    "beautifulsoup4>=4.12.0",  # Schnellerer Parser
+    "beautifulsoup4>=4.12.0",
     "lxml>=4.9.0",
+]
+
+# Optionale Abhängigkeiten (Extras)
+[project.optional-dependencies]
+dev = [
     "pytest>=8.4.2",
+]
+langchain = [
+    "langchain-core",
+    "langchain-community",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Encephos/html-table-rescuer"
+Homepage = "https://github.com/Encephos/table2md"
+Repository = "https://github.com/Encephos/table2md"
+
+# Teilt setuptools mit, wo der Code liegt
+[tool.setuptools.packages.find]
+where = ["src"]
