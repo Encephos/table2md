@@ -1,48 +1,86 @@
-# HTML Table Rescuer
+# html-table2md
 
-Ein robustes Python-Tool, um HTML-Tabellen für LLMs (ChatGPT, Claude, RAG) in Markdown zu retten. 
-Speziell entwickelt, um Probleme mit `colspan`, `rowspan` und defektem HTML zu lösen.
+A robust Python tool to extract complex HTML tables and convert them into clean Markdown, JSON, or CSV formats.
+
+Unlike simple formatters, this library features a **Grid Logic Solver** that correctly interprets `rowspan` and `colspan` attributes, normalizing complex HTML grids into perfectly aligned data structures.
+
+## How is this different from other `table2md` packages?
+
+There is an existing package called `table2md` on PyPI.
+
+* The **existing package** is a *formatter*. You feed it Python lists/dicts, and it draws a Markdown table.
+
+* **This package** is an *extractor and parser*. It takes raw HTML source code, uses `BeautifulSoup` to parse the tags, mathematically resolves complex cell spans (rowspans/colspans), and builds an internal representation before exporting to Markdown.
+
+## Architecture
+
+Our pipeline ensures that complex HTML structures are safely converted without data loss or misalignment:
+
+```mermaid
+graph TD
+    n1["HTML Input"] --> n2["BeautifulSoup Parser"]
+    n2 --> n3["Grid Logic<br>(Rowspan/Colspan Solver)"]
+    n3 --> n4["ParsedTable Data Object"]
+    n4 --> n5["Markdown Export"]
+    n4 --> n6["JSON/CSV Export"]
+    n4 --> n7["LangChain/LlamaIndex Wrappers"]
+```
 
 ## Installation
 
 ```bash
-pip install table2md  # (Nachdem du es published hast)
-# Oder lokal:
-pip install .
+pip install html-table2md
+```
 
-Nutzung
-from table2md import TableParser, ParseConfig, RowspanStrategy
+## Quick Start
 
-html = """
+```python
+from table2md.core import TableParser
+
+html_content = """
 <table border="1">
-    <tr>
-        <th>Produkt</th>
-        <th>Region</th>
-    </tr>
-    <tr>
-        <td rowspan="2">SuperWidget</td>
-        <td>Nord</td>
-    </tr>
-    <tr>
-        <td>Süd</td>
-    </tr>
+  <tr>
+    <th colspan="2">Header</th>
+  </tr>
+  <tr>
+    <td>Data 1</td>
+    <td>Data 2</td>
+  </tr>
 </table>
 """
 
-# Config optional (Standard ist 'dito' Strategie für Rowspans)
-config = ParseConfig(
-    rowspan_strategy=RowspanStrategy.FILL_WITH_DITO,
-    dito_prefix="siehe oben"
-)
+# Initialize parser with your HTML
+parser = TableParser(html_content)
 
-parser = TableParser(html, config)
-markdown_tables = parser.parse_to_markdown()
+# Parse all tables in the HTML
+tables = parser.parse()
 
-for table in markdown_tables:
-    print(table)
+if tables:
+    table = tables[0]
+    
+    # Export to Markdown (perfect for LLM context windows)
+    print(table.to_markdown())
+    
+    # Export to JSON
+    # print(table.to_json())
+    
+    # Export to CSV
+    # print(table.to_csv())
+```
 
-Output
-| Produkt | Region |
-| --- | --- |
-| SuperWidget | Nord |
-| siehe oben (SuperWidget) | Süd |
+## Features
+
+* [x] HTML parsing via `BeautifulSoup`
+* [x] Recursive inline-tag formatting (keeps links, bold, and italic tags alive even if nested in divs)
+* [x] Complex `rowspan` and `colspan` grid resolution (using flexible strategies like filling cells with "dito" to preserve context for LLMs)
+* [x] Clean Markdown export
+* [x] **Data Exports:** JSON and CSV serialization from the `ParsedTable` object
+* [x] **AI Integrations:** Includes a ready-to-use `LangChain` Document Loader
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
