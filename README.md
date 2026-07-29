@@ -105,4 +105,5 @@ This project is licensed under the MIT License.
 
 
 ### Blog-Posts: 
-> ** Read the first blog:** [How to Stop LLMs from Hallucinating on Complex HTML Tables](https://html-table-rescuer.hashnode.dev/how-to-stop-llms-from-hallucinating-on-complex-html-tables-python)
+> ** Read the 1. blog:** [How to Stop LLMs from Hallucinating on Complex HTML Tables](https://html-table-rescuer.hashnode.dev/how-to-stop-llms-from-hallucinating-on-complex-html-tables-python)
+> ** Read the 2. blog:** [How to Stop LLMs from Hallucinating on Complex HTML Tables](https://dev.to/encephos/how-to-stop-llms-from-hallucinating-on-complex-html-tables-python-2e0k)
