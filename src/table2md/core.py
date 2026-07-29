@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup, Tag
 from typing import List
-from .models import ParseConfig, MarkdownTable, RowspanStrategy
+from .models import ParseConfig, ParsedTable, RowspanStrategy
 from .cleaner import clean_cell_content
 
 class TableParser:
@@ -12,22 +12,25 @@ class TableParser:
             
         self.soup = BeautifulSoup(html_content, self.config.parser_library)
 
-    def parse(self) -> List[MarkdownTable]:
-        """Gibt eine Liste von MarkdownTable Objekten zurück."""
+    def parse(self) -> List[ParsedTable]:
+        """Gibt eine Liste von ParsedTable Objekten zurück."""
         tables = self.soup.find_all('table')
         results = []
         for table in tables:
-            md_table = self._process_single_table(table)
-            if md_table:
-                results.append(md_table)
+            parsed_table = self._process_single_table(table)
+            if parsed_table:
+                results.append(parsed_table)
         return results
 
     def parse_to_markdown(self) -> List[str]:
-        """Convenience: Gibt direkt Strings zurück."""
-        return [t.to_string() for t in self.parse()]
+        """Convenience: Gibt direkt Markdown-Strings zurück."""
+        return [t.to_markdown() for t in self.parse()]
 
-    def _process_single_table(self, table: Tag) -> MarkdownTable:
-        rows = table.find_all('tr')
+    def _process_single_table(self, table: Tag) -> ParsedTable:
+        # FIX 1: Nur Zeilen (<tr>) nehmen, die direkt zu DIESER Tabelle gehören.
+        all_trs = table.find_all('tr')
+        rows = [tr for tr in all_trs if tr.find_parent('table') is table]
+        
         if not rows:
             return None
 
@@ -37,7 +40,10 @@ class TableParser:
 
         # Pre-Scan um Grid aufzubauen
         for r_idx, row in enumerate(rows):
-            cells = row.find_all(['td', 'th'])
+            # FIX 2: Nur Zellen (td/th) nehmen, die direkt zu DIESER Zeile gehören.
+            all_cells = row.find_all(['td', 'th'])
+            cells = [cell for cell in all_cells if cell.find_parent('tr') is row]
+            
             c_idx = 0 
 
             for cell in cells:
@@ -84,13 +90,28 @@ class TableParser:
         if max_col == 0:
             return None
 
-        # Grid in Listen umwandeln
-        # Annahme: Zeile 0 ist Header (könnte man noch intelligenter machen)
-        headers = [grid.get((0, c), "") for c in range(max_col)]
-        
+        # --- Intelligente Header-Erkennung ---
+        first_row_has_th = False
+        if rows:
+            # Prüfen, ob die erste Zeile <th> Tags hat oder in einem <thead> liegt
+            has_th = rows[0].find('th') is not None
+            in_thead = rows[0].find_parent('thead') is not None
+            
+            if has_th or in_thead:
+                first_row_has_th = True
+
+        if first_row_has_th:
+            # Zeile 0 ist ein echter Header
+            headers = [grid.get((0, c), "") for c in range(max_col)]
+            start_row = 1
+        else:
+            # Kein Header gefunden -> Dummy-Header generieren, Zeile 0 als Daten behandeln
+            headers = [f"Column {c+1}" for c in range(max_col)]
+            start_row = 0
+            
         body_rows = []
-        for r in range(1, len(rows)):
+        for r in range(start_row, len(rows)):
             row_data = [grid.get((r, c), "") for c in range(max_col)]
             body_rows.append(row_data)
 
-        return MarkdownTable(headers=headers, rows=body_rows)
+        return ParsedTable(headers=headers, rows=body_rows)
