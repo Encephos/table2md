@@ -14,18 +14,21 @@ There is an existing package called `table2md` on PyPI.
 
 ### The Problem:
 Most parsers turn this `<td rowspan="2">` into a misaligned mess:
+```bash
 | Header | Value |
 |---|---|
 | Spanned | Row 1 |
 | Row 2 | |   <-- Everything shifts!
+```
 
 ### The Solution:
 `html-table-rescuer` uses a grid solver to correctly normalize the matrix:
+```bash
 | Header | Value |
 |---|---|
 | Spanned | Row 1 |
 | dito (Spanned) | Row 2 |
-
+```
 ## Architecture
 
 Our pipeline ensures that complex HTML structures are safely converted without data loss or misalignment:
