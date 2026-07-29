@@ -1,1 +1,20 @@
-
+name: Publish to PyPI
+        on:
+          release:
+            types: [published]
+        jobs:
+          pypi-publish:
+            name: Build and publish Python package
+            runs-on: ubuntu-latest
+            permissions:
+              id-token: write  # ZWINGEND NOTWENDIG FÜR OIDC
+              contents: read
+            steps:
+              - uses: actions/checkout@v4
+              - uses: actions/setup-python@v5
+                with:
+                  python-version: "3.11"
+              - run: python -m pip install --upgrade pip build uv
+              # Wir nutzen uv, da du es in deinem Projekt verwendest
+              - run: uv build
+              - uses: pypa/gh-action-pypi-publish@release/v1
