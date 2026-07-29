@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
+import json
+import csv
+import io
 
 class RowspanStrategy(Enum):
     """Strategie für vertikal verbundene Zellen (rowspan)."""
@@ -22,12 +25,12 @@ class ParseConfig:
     parser_library: str = "lxml" # oder 'html.parser'
 
 @dataclass
-class MarkdownTable:
-    """Das Ergebnis einer Konvertierung."""
+class ParsedTable:
+    """Das Ergebnis einer Konvertierung (zuvor MarkdownTable)."""
     headers: list[str]
     rows: list[list[str]]
     
-    def to_string(self) -> str:
+    def to_markdown(self) -> str:
         """Rendert die Tabelle zu einem Markdown-String."""
         if not self.headers and not self.rows:
             return ""
@@ -54,3 +57,46 @@ class MarkdownTable:
             lines.append(f"| {' | '.join(current_row)} |")
             
         return "\n".join(lines)
+
+    # Abwärtskompatibilität: Falls jemand schon to_string() nutzt
+    def to_string(self) -> str:
+        return self.to_markdown()
+
+    def to_json(self, indent: int = 2) -> str:
+        """Rendert die Tabelle zu einem JSON-String (Liste von Dictionaries)."""
+        if not self.headers and not self.rows:
+            return "[]"
+        
+        result = []
+        # Fallback falls Headers fehlen
+        effective_headers = self.headers if self.headers else [f"Column {i+1}" for i in range(len(self.rows[0])) if self.rows]
+        
+        for row in self.rows:
+            # Stelle sicher, dass row und headers gleich lang sind
+            padded_row = row + [""] * (len(effective_headers) - len(row))
+            padded_row = padded_row[:len(effective_headers)]
+            
+            row_dict = dict(zip(effective_headers, padded_row))
+            result.append(row_dict)
+            
+        return json.dumps(result, indent=indent, ensure_ascii=False)
+
+    def to_csv(self, delimiter: str = ',') -> str:
+        """Rendert die Tabelle zu einem CSV-String."""
+        if not self.headers and not self.rows:
+            return ""
+            
+        output = io.StringIO()
+        writer = csv.writer(output, delimiter=delimiter)
+        
+        if self.headers:
+            writer.writerow(self.headers)
+            
+        for row in self.rows:
+            # Padding: Zeile auffüllen falls zu kurz (orientiert an headern)
+            cols = len(self.headers) if self.headers else len(row)
+            current_row = row + [""] * (cols - len(row))
+            current_row = current_row[:cols]
+            writer.writerow(current_row)
+            
+        return output.getvalue()
