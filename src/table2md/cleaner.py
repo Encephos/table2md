@@ -1,5 +1,5 @@
 import re
-from bs4 import Tag, NavigableString
+from bs4 import Tag, NavigableString, Comment
 from .models import ParseConfig
 
 def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
@@ -11,6 +11,10 @@ def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
         return ""
 
     def _parse_element(element) -> str:
+        # HTML-Kommentare sind NavigableString-Subklassen und dürfen nicht als Text durchrutschen
+        if isinstance(element, Comment):
+            return ""
+
         # --- 1. Base Case: Wir sind beim reinen Text angekommen ---
         if isinstance(element, NavigableString):
             text = str(element).replace("\n", " ").strip()
