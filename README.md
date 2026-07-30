@@ -47,6 +47,10 @@ graph TD
 
 ```bash
 pip install html-table-rescuer
+
+# With framework integrations
+pip install "html-table-rescuer[langchain]"
+pip install "html-table-rescuer[llamaindex]"
 ```
 
 ## Quick Start
@@ -113,6 +117,49 @@ Options:
 | `--no-links` / `--no-bold` / `--no-italic` | Strip the respective inline formatting |
 | `--parser` | BeautifulSoup backend (`lxml` default, or `html.parser`) |
 
+## AI Framework Integrations
+
+Every table becomes its own document, so retrieval never splits a table in half.
+
+### LangChain
+
+```python
+from html_table_rescuer.integrations.langchain import HTMLTableRescuerLoader
+
+docs = HTMLTableRescuerLoader("page.html").load()
+print(docs[0].page_content)   # Markdown table
+print(docs[0].metadata)       # {'source': 'page.html', 'table_index': 0, 'parser': 'html_table_rescuer'}
+```
+
+### LlamaIndex
+
+```python
+from html_table_rescuer.integrations.llamaindex import HTMLTableRescuerReader
+
+docs = HTMLTableRescuerReader().load_data("page.html")
+```
+
+Works as a `file_extractor` in `SimpleDirectoryReader`, so entire folders are handled for you:
+
+```python
+from llama_index.core import SimpleDirectoryReader
+
+reader = SimpleDirectoryReader(
+    "./docs",
+    file_extractor={".html": HTMLTableRescuerReader()},
+)
+docs = reader.load_data()
+```
+
+Both accept a `ParseConfig` to control rowspan handling and inline formatting:
+
+```python
+from html_table_rescuer import ParseConfig, RowspanStrategy
+
+config = ParseConfig(rowspan_strategy=RowspanStrategy.REPEAT_VALUE)
+docs = HTMLTableRescuerReader(config=config).load_data("page.html")
+```
+
 ## Features
 
 * [x] HTML parsing via `BeautifulSoup`
@@ -121,7 +168,7 @@ Options:
 * [x] Clean Markdown export
 * [x] **Data Exports:** JSON and CSV serialization from the `ParsedTable` object
 * [x] **CLI:** `html-table-rescuer` command with file/URL/stdin input and Markdown/JSON/CSV output
-* [x] **AI Integrations:** Includes a ready-to-use `LangChain` Document Loader
+* [x] **AI Integrations:** Ready-to-use `LangChain` Document Loader and `LlamaIndex` Reader (works with `SimpleDirectoryReader`)
 * [x] Robust against broken real-world HTML: invalid `colspan`/`rowspan` values, HTML comments, and oversized spans are handled gracefully
 
 ## 🤝 Contributing

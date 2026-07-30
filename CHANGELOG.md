@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+- LlamaIndex integration: `HTMLTableRescuerReader` (extra: `llamaindex`). Each
+  table becomes its own `Document`. Works as a `file_extractor` in
+  `SimpleDirectoryReader`; `extra_info` passed by the framework takes precedence
+  over the reader's own metadata.
+- Test coverage for both framework integrations (13 tests); the LangChain loader
+  was previously untested. CI now installs the integration extras so these run.
+
 ## 0.2.1 (2026-07-30)
 
 ### Changed

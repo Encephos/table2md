@@ -40,6 +40,9 @@ langchain = [
     "langchain-core",
     "langchain-community",
 ]
+llamaindex = [
+    "llama-index-core",
+]
 
 [project.urls]
 Homepage = "https://github.com/Encephos/html-table-rescuer"
