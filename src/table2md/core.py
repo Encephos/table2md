@@ -1,10 +1,21 @@
 from bs4 import BeautifulSoup, Tag
-from typing import List
+from typing import List, Optional
 from .models import ParseConfig, ParsedTable, RowspanStrategy
 from .cleaner import clean_cell_content
 
+# HTML-Spec erlaubt maximal colspan="1000"
+MAX_COLSPAN = 1000
+
+def _parse_span(cell: Tag, attr: str) -> int:
+    """Liest colspan/rowspan robust: ungültige Werte ("", "abc", "0", negativ) zählen als 1."""
+    try:
+        value = int(str(cell.get(attr, 1)).strip())
+    except (ValueError, TypeError):
+        return 1
+    return value if value >= 1 else 1
+
 class TableParser:
-    def __init__(self, html_content: str, config: ParseConfig = None):
+    def __init__(self, html_content: str, config: Optional[ParseConfig] = None):
         if config is None:
             self.config = ParseConfig()
         else:
@@ -35,7 +46,6 @@ class TableParser:
             return None
 
         grid = {} # (row, col) -> content
-        max_col = 0
         occupied_cells = set() # (row, col)
 
         # Pre-Scan um Grid aufzubauen
@@ -51,8 +61,9 @@ class TableParser:
                 while (r_idx, c_idx) in occupied_cells:
                     c_idx += 1
 
-                colspan = int(cell.get('colspan', 1))
-                rowspan = int(cell.get('rowspan', 1))
+                colspan = min(_parse_span(cell, 'colspan'), MAX_COLSPAN)
+                # Rowspan endet wie im Browser an der letzten Zeile der Tabelle
+                rowspan = min(_parse_span(cell, 'rowspan'), len(rows) - r_idx)
                 
                 # Inhalt säubern
                 content = clean_cell_content(cell, self.config)
@@ -84,11 +95,12 @@ class TableParser:
                             grid[(target_r, target_c)] = ""
 
                 c_idx += colspan
-            
-            max_col = max(max_col, c_idx)
 
-        if max_col == 0:
+        if not occupied_cells:
             return None
+
+        # Spaltenzahl aus dem tatsächlich belegten Grid ableiten
+        max_col = max(c for _, c in occupied_cells) + 1
 
         # --- Intelligente Header-Erkennung ---
         first_row_has_th = False
