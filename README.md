@@ -1,6 +1,10 @@
 # html-table-rescuer
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Encephos/html-table-rescuer/blob/main/examples/demo.ipynb)
+
 A robust Python tool to extract complex HTML tables and convert them into clean Markdown, JSON, or CSV formats.
+
+**[Try it in your browser](https://colab.research.google.com/github/Encephos/html-table-rescuer/blob/main/examples/demo.ipynb)** — an interactive Colab notebook, nothing to install.
 
 Unlike simple formatters, this library features a **Grid Logic Solver** that correctly interprets `rowspan` and `colspan` attributes, normalizing complex HTML grids into perfectly aligned data structures.
 

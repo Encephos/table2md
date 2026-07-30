@@ -15,6 +15,11 @@
   serialization. Compatible with both haystack-ai 2.x and 3.x.
 - Test coverage for all framework integrations (26 tests); the LangChain loader
   was previously untested. CI now installs the integration extras so these run.
+- `ParsedTable` now renders as a real table in Jupyter/Colab via
+  `_repr_markdown_`.
+- Interactive demo notebook (`examples/demo.ipynb`) with an "Open in Colab"
+  badge in the README, so the tool can be tried in the browser without
+  installing anything.
 
 ## 0.2.1 (2026-07-30)
 
