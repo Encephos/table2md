@@ -1,16 +1,5 @@
 from table2md.core import TableParser
 
-def to_markdown(headers, rows):
-    # Kopfzeile
-    md = "| " + " | ".join(headers) + " |\n"
-    # Trenner
-    md += "| " + " | ".join(["---"] * len(headers)) + " |\n"
-    # Zeilen
-    for row in rows:
-        md += "| " + " | ".join(row) + " |\n"
-    return md
-
-
 # Liste von Testfällen mit verschiedenen HTML-Strukturen
 test_tables = {
     # 1. Einfache Tabelle
@@ -278,18 +267,13 @@ test_tables = {
 }
 
 
-# Durchlauf aller Testfälle
-for name, html in test_tables.items():
-    print(f"\n=== Testfall: {name} ===")
-    parser = TableParser(html)
-    tables = parser.parse()
+if __name__ == "__main__":
+    # Durchlauf aller Testfälle
+    for name, html in test_tables.items():
+        print(f"\n=== Testfall: {name} ===")
+        parser = TableParser(html)
+        tables = parser.parse()
 
-    for t in tables:
-        print("Parsed object:", t)
-
-        # Falls dein Parser bereits headers/rows liefert:
-        if hasattr(t, "headers") and hasattr(t, "rows"):
-            print(to_markdown(t.headers, t.rows))
-        else:
-            # Fallback: Dummy-Ausgabe
-            print("Keine headers/rows verfügbar")
+        for t in tables:
+            print("Parsed object:", t)
+            print(t.to_markdown())
