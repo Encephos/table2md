@@ -1,4 +1,4 @@
-# html-table2md
+# html-table-rescuer
 
 A robust Python tool to extract complex HTML tables and convert them into clean Markdown, JSON, or CSV formats.
 
@@ -46,13 +46,15 @@ graph TD
 ## Installation
 
 ```bash
-pip install html-table2md
+pip install html-table-rescuer
 ```
+
+(The import name stays `table2md`.)
 
 ## Quick Start
 
 ```python
-from table2md.core import TableParser
+from table2md import TableParser
 
 html_content = """
 <table border="1">
@@ -85,6 +87,34 @@ if tables:
     # print(table.to_csv())
 ```
 
+## Command Line
+
+The package installs a `table2md` command that reads from a file, a URL, or stdin:
+
+```bash
+# From a file
+table2md page.html
+
+# From a URL
+table2md https://example.com/page.html
+
+# From stdin (pipe or '-')
+curl -s https://example.com/page.html | table2md
+cat page.html | table2md - --format json
+```
+
+Options:
+
+| Option | Description |
+|---|---|
+| `--format`, `-f` | Output format: `markdown` (default), `json`, `csv` |
+| `--strategy`, `-s` | Rowspan fill strategy: `fill_dito` (default), `repeat`, `empty` |
+| `--dito-prefix` | Prefix used by the `fill_dito` strategy |
+| `--table`, `-t` | Extract only the table with this index (0-based) |
+| `--output`, `-o` | Write to a file instead of stdout; with CSV and multiple tables, writes `name_1.csv`, `name_2.csv`, … |
+| `--no-links` / `--no-bold` / `--no-italic` | Strip the respective inline formatting |
+| `--parser` | BeautifulSoup backend (`lxml` default, or `html.parser`) |
+
 ## Features
 
 * [x] HTML parsing via `BeautifulSoup`
@@ -92,7 +122,9 @@ if tables:
 * [x] Complex `rowspan` and `colspan` grid resolution (using flexible strategies like filling cells with "dito" to preserve context for LLMs)
 * [x] Clean Markdown export
 * [x] **Data Exports:** JSON and CSV serialization from the `ParsedTable` object
+* [x] **CLI:** `table2md` command with file/URL/stdin input and Markdown/JSON/CSV output
 * [x] **AI Integrations:** Includes a ready-to-use `LangChain` Document Loader
+* [x] Robust against broken real-world HTML: invalid `colspan`/`rowspan` values, HTML comments, and oversized spans are handled gracefully
 
 ## 🤝 Contributing
 

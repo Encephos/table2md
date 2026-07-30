@@ -4,13 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "html-table-rescuer"
-version = "0.1.0"
+version = "0.2.0"
 description = "Extracts HTML tables and converts them to Markdown, preserving structure via row/colspan handling."
 readme = "README.md"
 authors = [{ name = "Encephos", email = "magiltraun@gmail.com" }]
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -29,6 +34,7 @@ table2md = "table2md.cli:app"
 [project.optional-dependencies]
 dev = [
     "pytest>=8.4.2",
+    "ruff>=0.8.0",
 ]
 langchain = [
     "langchain-core",
@@ -42,3 +48,17 @@ Repository = "https://github.com/Encephos/table2md"
 # Teilt setuptools mit, wo der Code liegt
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+table2md = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+# Bewusst minimales Set: Fehler + Imports, kein Umstylen von Bestandscode
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
