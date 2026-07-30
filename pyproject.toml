@@ -43,6 +43,9 @@ langchain = [
 llamaindex = [
     "llama-index-core",
 ]
+haystack = [
+    "haystack-ai>=2.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/Encephos/html-table-rescuer"

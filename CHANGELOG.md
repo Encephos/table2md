@@ -7,7 +7,13 @@
   table becomes its own `Document`. Works as a `file_extractor` in
   `SimpleDirectoryReader`; `extra_info` passed by the framework takes precedence
   over the reader's own metadata.
-- Test coverage for both framework integrations (13 tests); the LangChain loader
+- Haystack integration: `HTMLTableRescuerConverter` (extra: `haystack`). Unlike
+  Haystack's own `HTMLToDocument`, one source yields one `Document` per table.
+  Accepts file paths and `ByteStream`s, follows the Haystack convention of
+  skipping unreadable sources with a warning instead of failing the pipeline,
+  and supports `to_dict`/`from_dict` so a `ParseConfig` survives pipeline
+  serialization. Compatible with both haystack-ai 2.x and 3.x.
+- Test coverage for all framework integrations (26 tests); the LangChain loader
   was previously untested. CI now installs the integration extras so these run.
 
 ## 0.2.1 (2026-07-30)
