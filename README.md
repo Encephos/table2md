@@ -49,12 +49,10 @@ graph TD
 pip install html-table-rescuer
 ```
 
-(The import name stays `table2md`.)
-
 ## Quick Start
 
 ```python
-from table2md import TableParser
+from html_table_rescuer import TableParser
 
 html_content = """
 <table border="1">
@@ -89,18 +87,18 @@ if tables:
 
 ## Command Line
 
-The package installs a `table2md` command that reads from a file, a URL, or stdin:
+The package installs an `html-table-rescuer` command that reads from a file, a URL, or stdin:
 
 ```bash
 # From a file
-table2md page.html
+html-table-rescuer page.html
 
 # From a URL
-table2md https://example.com/page.html
+html-table-rescuer https://example.com/page.html
 
 # From stdin (pipe or '-')
-curl -s https://example.com/page.html | table2md
-cat page.html | table2md - --format json
+curl -s https://example.com/page.html | html-table-rescuer
+cat page.html | html-table-rescuer - --format json
 ```
 
 Options:
@@ -122,7 +120,7 @@ Options:
 * [x] Complex `rowspan` and `colspan` grid resolution (using flexible strategies like filling cells with "dito" to preserve context for LLMs)
 * [x] Clean Markdown export
 * [x] **Data Exports:** JSON and CSV serialization from the `ParsedTable` object
-* [x] **CLI:** `table2md` command with file/URL/stdin input and Markdown/JSON/CSV output
+* [x] **CLI:** `html-table-rescuer` command with file/URL/stdin input and Markdown/JSON/CSV output
 * [x] **AI Integrations:** Includes a ready-to-use `LangChain` Document Loader
 * [x] Robust against broken real-world HTML: invalid `colspan`/`rowspan` values, HTML comments, and oversized spans are handled gracefully
 

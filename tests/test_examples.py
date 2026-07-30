@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from table2md import TableParser
+from html_table_rescuer import TableParser
 
 _EXAMPLES = Path(__file__).parent.parent / "examples" / "simple_usage.py"
 _spec = importlib.util.spec_from_file_location("simple_usage", _EXAMPLES)

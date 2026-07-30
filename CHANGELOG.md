@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.1 (2026-07-30)
+
+### Changed
+- **Breaking:** the import package was renamed from `table2md` to
+  `html_table_rescuer`, matching the distribution name and the renamed GitHub
+  repository (`Encephos/html-table-rescuer`). Update imports accordingly:
+  `from html_table_rescuer import TableParser`.
+- The installed CLI command is now `html-table-rescuer` (was `table2md`).
+- The LangChain loader class was renamed from `Table2MDLoader` to
+  `HTMLTableRescuerLoader`.
+
 ## 0.2.0 (2026-07-30)
 
 ### Added

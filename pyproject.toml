@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "html-table-rescuer"
-version = "0.2.0"
+version = "0.2.1"
 description = "Extracts HTML tables and converts them to Markdown, preserving structure via row/colspan handling."
 readme = "README.md"
 authors = [{ name = "Encephos", email = "magiltraun@gmail.com" }]
@@ -28,7 +28,7 @@ dependencies = [
 ]
 
 [project.scripts]
-table2md = "table2md.cli:app"
+html-table-rescuer = "html_table_rescuer.cli:app"
 
 # Optionale Abhängigkeiten (Extras)
 [project.optional-dependencies]
@@ -42,15 +42,15 @@ langchain = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Encephos/table2md"
-Repository = "https://github.com/Encephos/table2md"
+Homepage = "https://github.com/Encephos/html-table-rescuer"
+Repository = "https://github.com/Encephos/html-table-rescuer"
 
 # Teilt setuptools mit, wo der Code liegt
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-table2md = ["py.typed"]
+html_table_rescuer = ["py.typed"]
 
 [tool.ruff]
 line-length = 100

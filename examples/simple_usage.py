@@ -1,4 +1,4 @@
-from table2md.core import TableParser
+from html_table_rescuer.core import TableParser
 
 # Liste von Testfällen mit verschiedenen HTML-Strukturen
 test_tables = {

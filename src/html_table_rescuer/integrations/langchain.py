@@ -4,11 +4,11 @@ from typing import Optional
 from langchain_community.document_loaders.base import BaseLoader
 from langchain_core.documents import Document
 
-from table2md.core import TableParser
-from table2md.models import ParseConfig
+from html_table_rescuer.core import TableParser
+from html_table_rescuer.models import ParseConfig
 
 
-class Table2MDLoader(BaseLoader):
+class HTMLTableRescuerLoader(BaseLoader):
     """
     LangChain Document Loader der HTML-Dateien nach Tabellen durchsucht 
     und diese als Markdown-Dokumente extrahiert. Behebt typische Probleme 
@@ -21,7 +21,7 @@ class Table2MDLoader(BaseLoader):
 
         Args:
             file_path: Pfad zur HTML-Datei.
-            config: Optionales table2md ParseConfig Objekt.
+            config: Optionales html_table_rescuer ParseConfig Objekt.
         """
         self.file_path = file_path
         self.config = config
@@ -44,7 +44,7 @@ class Table2MDLoader(BaseLoader):
             metadata = {
                 "source": self.file_path,
                 "table_index": idx,
-                "parser": "table2md"
+                "parser": "html_table_rescuer"
             }
             
             yield Document(page_content=md_content, metadata=metadata)

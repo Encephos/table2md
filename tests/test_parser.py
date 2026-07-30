@@ -1,7 +1,7 @@
 import pytest
 
-from table2md.core import TableParser
-from table2md.models import ParseConfig, RowspanStrategy
+from html_table_rescuer.core import TableParser
+from html_table_rescuer.models import ParseConfig, RowspanStrategy
 
 
 # --- Fixtures (Optionale Vorbereitung) ---

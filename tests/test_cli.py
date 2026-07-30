@@ -1,10 +1,10 @@
-"""Tests für die Typer-CLI (table2md)."""
+"""Tests für die Typer-CLI (html-table-rescuer)."""
 import json
 from unittest.mock import MagicMock, patch
 
 from typer.testing import CliRunner
 
-from table2md.cli import app
+from html_table_rescuer.cli import app
 
 runner = CliRunner()
 
@@ -60,7 +60,7 @@ def test_stdin_dash():
 
 
 def test_stdin_pipe_without_argument():
-    """`curl … | table2md` — gepipte Eingabe ohne Quell-Argument."""
+    """`curl … | html-table-rescuer` — gepipte Eingabe ohne Quell-Argument."""
     result = runner.invoke(app, [], input=SIMPLE_HTML)
     assert result.exit_code == 0
     assert "| Max | 25 |" in result.output
@@ -70,7 +70,7 @@ def test_url_uses_timeout():
     mock_response = MagicMock()
     mock_response.text = SIMPLE_HTML
     mock_response.raise_for_status = MagicMock()
-    with patch("table2md.cli.requests.get", return_value=mock_response) as mock_get:
+    with patch("html_table_rescuer.cli.requests.get", return_value=mock_response) as mock_get:
         result = runner.invoke(app, ["https://example.com/page.html"])
     assert result.exit_code == 0
     assert "| Max | 25 |" in result.output
