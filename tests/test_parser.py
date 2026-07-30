@@ -1,6 +1,8 @@
 import pytest
+
 from table2md.core import TableParser
 from table2md.models import ParseConfig, RowspanStrategy
+
 
 # --- Fixtures (Optionale Vorbereitung) ---
 @pytest.fixture

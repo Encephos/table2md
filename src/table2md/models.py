@@ -1,8 +1,9 @@
-from dataclasses import dataclass
-from enum import Enum
-import json
 import csv
 import io
+import json
+from dataclasses import dataclass
+from enum import Enum
+
 
 class RowspanStrategy(Enum):
     """Strategie für vertikal verbundene Zellen (rowspan)."""

@@ -1,6 +1,7 @@
 """Tests für Robustheit bei kaputtem Real-World-HTML (Spans, Kommentare, Grid-Grenzen)."""
 import pytest
-from table2md import TableParser, ParseConfig, ParsedTable, RowspanStrategy
+
+from table2md import ParseConfig, ParsedTable, RowspanStrategy, TableParser
 
 
 def test_public_api_imports():

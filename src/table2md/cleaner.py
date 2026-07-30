@@ -1,6 +1,9 @@
 import re
-from bs4 import Tag, NavigableString, Comment
+
+from bs4 import Comment, NavigableString, Tag
+
 from .models import ParseConfig
+
 
 def clean_cell_content(cell: Tag, config: ParseConfig) -> str:
     """

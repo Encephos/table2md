@@ -1,7 +1,9 @@
-from bs4 import BeautifulSoup, Tag
 from typing import List, Optional
-from .models import ParseConfig, ParsedTable, RowspanStrategy
+
+from bs4 import BeautifulSoup, Tag
+
 from .cleaner import clean_cell_content
+from .models import ParseConfig, ParsedTable, RowspanStrategy
 
 # HTML-Spec erlaubt maximal colspan="1000"
 MAX_COLSPAN = 1000
@@ -12,7 +14,7 @@ def _parse_span(cell: Tag, attr: str) -> int:
         value = int(str(cell.get(attr, 1)).strip())
     except (ValueError, TypeError):
         return 1
-    return value if value >= 1 else 1
+    return max(value, 1)
 
 class TableParser:
     def __init__(self, html_content: str, config: Optional[ParseConfig] = None):

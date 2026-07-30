@@ -1,8 +1,12 @@
-from typing import List, Optional, Iterator
-from langchain_core.documents import Document
+from collections.abc import Iterator
+from typing import Optional
+
 from langchain_community.document_loaders.base import BaseLoader
+from langchain_core.documents import Document
+
 from table2md.core import TableParser
 from table2md.models import ParseConfig
+
 
 class Table2MDLoader(BaseLoader):
     """

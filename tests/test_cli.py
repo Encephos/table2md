@@ -1,6 +1,6 @@
 """Tests für die Typer-CLI (table2md)."""
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from typer.testing import CliRunner
 
