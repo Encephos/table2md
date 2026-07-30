@@ -40,7 +40,7 @@ graph TD
     n3 --> n4["ParsedTable Data Object"]
     n4 --> n5["Markdown Export"]
     n4 --> n6["JSON/CSV Export"]
-    n4 --> n7["LangChain/LlamaIndex Wrappers"]
+    n4 --> n7["LangChain/LlamaIndex/Haystack Wrappers"]
 ```
 
 ## Installation
@@ -51,6 +51,7 @@ pip install html-table-rescuer
 # With framework integrations
 pip install "html-table-rescuer[langchain]"
 pip install "html-table-rescuer[llamaindex]"
+pip install "html-table-rescuer[haystack]"
 ```
 
 ## Quick Start
@@ -151,7 +152,27 @@ reader = SimpleDirectoryReader(
 docs = reader.load_data()
 ```
 
-Both accept a `ParseConfig` to control rowspan handling and inline formatting:
+### Haystack
+
+```python
+from html_table_rescuer.integrations.haystack import HTMLTableRescuerConverter
+
+converter = HTMLTableRescuerConverter()
+docs = converter.run(sources=["page.html"])["documents"]
+```
+
+Drops straight into a pipeline — unreadable sources are skipped with a warning
+rather than failing the run, and `ParseConfig` survives pipeline serialization:
+
+```python
+from haystack import Pipeline
+
+pipe = Pipeline()
+pipe.add_component("converter", HTMLTableRescuerConverter())
+result = pipe.run({"converter": {"sources": ["page.html"]}})
+```
+
+All three accept a `ParseConfig` to control rowspan handling and inline formatting:
 
 ```python
 from html_table_rescuer import ParseConfig, RowspanStrategy
@@ -168,7 +189,7 @@ docs = HTMLTableRescuerReader(config=config).load_data("page.html")
 * [x] Clean Markdown export
 * [x] **Data Exports:** JSON and CSV serialization from the `ParsedTable` object
 * [x] **CLI:** `html-table-rescuer` command with file/URL/stdin input and Markdown/JSON/CSV output
-* [x] **AI Integrations:** Ready-to-use `LangChain` Document Loader and `LlamaIndex` Reader (works with `SimpleDirectoryReader`)
+* [x] **AI Integrations:** Ready-to-use `LangChain` Document Loader, `LlamaIndex` Reader (works with `SimpleDirectoryReader`), and `Haystack` Converter
 * [x] Robust against broken real-world HTML: invalid `colspan`/`rowspan` values, HTML comments, and oversized spans are handled gracefully
 
 ## 🤝 Contributing
