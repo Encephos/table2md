@@ -141,3 +141,10 @@ def test_ragged_rows():
     # Zählen der Pipes ist ein guter Weg, um die Struktur zu prüfen
     assert last_line.count("|") == 4 # Anfang + 3 Zellen + Ende = 4 Pipes
     assert "D" in last_line
+
+
+def test_repr_markdown_for_notebooks():
+    """Jupyter/Colab rendern Objekte mit _repr_markdown_ automatisch als Tabelle."""
+    html = "<table><tr><th>A</th></tr><tr><td>1</td></tr></table>"
+    table = TableParser(html).parse()[0]
+    assert table._repr_markdown_() == table.to_markdown()

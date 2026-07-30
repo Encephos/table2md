@@ -63,6 +63,10 @@ class ParsedTable:
     def to_string(self) -> str:
         return self.to_markdown()
 
+    def _repr_markdown_(self) -> str:
+        """Jupyter/Colab-Integration: Tabellen rendern automatisch als Markdown."""
+        return self.to_markdown()
+
     def to_json(self, indent: int = 2) -> str:
         """Rendert die Tabelle zu einem JSON-String (Liste von Dictionaries)."""
         if not self.headers and not self.rows:
